@@ -1,4 +1,4 @@
-from ..pyqcc import qcc
+from ..pyqcc import Qcc
 
 class Charts(object):
     '''
@@ -12,7 +12,7 @@ class Charts(object):
         '''
         Layer chart objects with other passed objects.
         '''
-        if isinstance(model, qcc): # add chart to qcc base object.
+        if isinstance(model, Qcc): # add chart to qcc base object.
             model.layers += self.layers
             return model
         self.layers.append(model) # otherwise layer chart objects.

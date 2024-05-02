@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-class qcc(object):
+class Qcc(object):
     '''
     Quality Control Charts.
 
