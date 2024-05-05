@@ -38,7 +38,7 @@ class Qcc(object):
         A3sbar = A3[size] * stdevbar
         ucl = xbarbar + A3sbar
         lcl = xbarbar - A3sbar
-        print(f'UCL:{ucl:.3f}, Centre:{xbarbar:.3f}, LCL:{lcl:.3f}.')
+        print(f'UCL:{ucl:.3f}, Centre:{xbarbar:.3f}, LCL:{lclS:.3f}.')
 
     def _gen_xbar(self):
         print('Generate xbar object.')
