@@ -1,9 +1,6 @@
-"""
-pyqcc.models
-~~~~~~~~~~~~
-This module contains the base model classes for the qcc package.
-"""
 import pandas as pd
+import numpy as np
+from constants import A3
 
 class Qcc(object):
     """
@@ -24,16 +21,35 @@ class Qcc(object):
         self.newdata = newdata
         self.nsigmas = nsigmas
         self.conflevel = conflevel
-        self.stats = []
+        # self.stats = []
 
-        match chart_type:
-            case 'xbar':
-                self.gen_xbar()
+        self._gen_stats()
 
-    def gen_xbar(self):
+        # match chart_type:
+        #     case 'xbar':
+        #         self._gen_xbar()
+
+    def _gen_stats(self):
+        numgroups = self.data.shape[0]
+        size = self.data.shape[1]
+        xbarbar = self.data.mean(axis=1).mean()
+        rbar = (self.data.max(axis=1) - self.data.min(axis=1)).mean()
+        stdevbar = self.data.std(axis=1).mean()
+        A3sbar = A3[size] * stdevbar
+        ucl = xbarbar + A3sbar
+        lcl = xbarbar - A3sbar
+        print(f'UCL:{ucl:.3f}, Centre:{xbarbar:.3f}, LCL:{lcl:.3f}.')
+
+    def _gen_xbar(self):
         print('Generate xbar object.')
 
-from data import pistonrings
+
+
+# ----------
+from data import pistonrings, hardbake
 from utils import qcc_groups
-a = qcc_groups(pistonrings[0:30], 'diameter', 'sample')
-xbar = Qcc(data=a, chart_type='xbar')
+
+diameter = qcc_groups(pistonrings, 'diameter', 'sample')
+
+xbar = Qcc(data=diameter, chart_type='xbar')
+# print(xbar.nsigmas)
