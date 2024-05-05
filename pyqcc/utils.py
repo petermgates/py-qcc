@@ -28,9 +28,8 @@ def qcc_groups(df: pd.DataFrame, values_col: str, group_col: str) -> pd.DataFram
               .unstack()
               .reset_index()
             )
-    df = df.iloc[:, 1:]
+    df = df.iloc[:, 1:] # drop first col
     df = df.rename(
         columns={x:y for x,y in zip(df.columns, range(1, len(df.columns) + 1))}
     )
-    
     return df
