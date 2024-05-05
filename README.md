@@ -8,3 +8,6 @@ Planned features:
 - Process capability analysis.
 - Pareto chart and cause-and-effect chart.
 - Multivariate control charts.
+
+ToDo:
+- qcc_groups: reshape data based on grouping factor. Array width based on the largest group size with None inserted in smaller groups.

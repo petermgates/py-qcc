@@ -1,6 +1,6 @@
 from .models import Qcc
 
-class Charts(object):
+class Chart(object):
     '''
     Control chart base class. 
     '''
@@ -18,10 +18,13 @@ class Charts(object):
         self.layers.append(model) # otherwise append this chart object to existing.
         return self
 
-class Imr(Charts):
+class Imr(Chart):
     '''
     Individuals and moving range (I-MR or X-MR) control chart.
     '''
     from .constants import d2
     def __init__(self) -> None:
         super(Imr, self).__init__()
+        
+        # self.summary_stats()
+    
