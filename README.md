@@ -10,4 +10,4 @@ Planned features:
 - Multivariate control charts.
 
 ToDo:
-- qcc_groups: reshape data based on grouping factor. Array width based on the largest group size with None inserted in smaller groups.
+- [x] qcc_groups: reshape data based on grouping factor. Array width based on the largest group size with None inserted in smaller groups.
