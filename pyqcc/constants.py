@@ -1,3 +1,5 @@
+# Sourced from Introduction to Statistical Quality Control, 7th Edition (Montgomery 2012)
+
 # Factors for averages control charts
 # n   0  1  2      3      4      5      6      7      8      9      10     11     12     13     14     15     16     17     18     19     20     21     22     23     24     25
 A  = [0, 0, 2.121, 1.732, 1.500, 1.342, 1.225, 1.134, 1.061, 1.000, 0.949, 0.905, 0.866, 0.832, 0.802, 0.775, 0.750, 0.728, 0.707, 0.688, 0.671, 0.655, 0.640, 0.626, 0.612, 0.600]
