@@ -26,6 +26,7 @@ class Qcc:
          """Return chart properties depending on chart type."""
          match self.chart_type:
             case 'xbar':
-                self.summary = Xbar(self.data).summary
-                self.chart = Xbar(self.data).chart
+                xbar = Xbar(self.data)
+                self.summary = xbar.summary
+                self.chart = xbar.chart
          
