@@ -20,7 +20,9 @@ class Qcc:
     
     def __repr__(self):
          """Return summary statistics when object is printed."""
+         plt.show()
          return self.summary
+
 
     def _get_chart(self):
          """Return chart properties depending on chart type."""
@@ -28,5 +30,6 @@ class Qcc:
             case 'xbar':
                 xbar = Xbar(self.data)
                 self.summary = xbar.summary
-                self.chart = xbar.chart
+                self.fig = xbar.fig
+                self.ax1 = xbar.ax1
          

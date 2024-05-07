@@ -1,3 +1,4 @@
+import matplotlib.figure
 import matplotlib.pyplot as plt
 import pandas as pd
 from tabulate import tabulate
@@ -13,48 +14,52 @@ class Chart(object):
     fig_hpad = 5
     fig_linewidth = 1
 
-
 class Xbar(Chart):
-    
+    fig_title = "x-bar Chart of Measurements"
+    fig_axis_h = "Subgroup"
+    fig_axis_v = "Sample mean"
     def __init__(self,
         data: pd.DataFrame,
-        title: str = "",
+        title: str = None,
         ) -> object:
         self.data = data
+        if title: self.fig_title = title 
         self.summary_dict = self._summary_dict(self.data)
         self.summary = self._summary(self.summary_dict)
-        self.chart = self._chart(self.data, self.summary_dict)
+        self.fig = self._set_fig()
+        self.ax1 = self._set_chart(self.data, self.fig)
 
     def _summary_dict(self, data: pd.DataFrame) -> dict:
          """Group statistics for the data"""
-         describe = data.mean(axis=1).describe()
-         n = data.shape[1]
-         rbar = (data.max(axis=1) - data.min(axis=1)).mean()
-         xbarbar = (data.mean(axis=1)).mean()
-         stdevbar = data.std(axis=1).mean()
-         lcl = xbarbar - (A2[n] * rbar)
-         ucl = xbarbar + (A2[n] * rbar)
+         self.describe = data.mean(axis=1).describe()
+         self.n = data.shape[1]
+         self.rbar = (data.max(axis=1) - data.min(axis=1)).mean()
+         self.xbarbar = (data.mean(axis=1)).mean()
+         self.stdevbar = data.std(axis=1).mean()
+         self.lcl = self.xbarbar - (A2[self.n] * self.rbar)
+         self.ucl = self.xbarbar + (A2[self.n] * self.rbar)
 
          summary = {
               "stats": {
-                "Min": [describe["min"]], "1st Qu.": [describe['25%']],
-                "Median": [describe['50%']], "Mean": [describe['mean']],
-                "3rd Qu.": [describe['75%']], "Max.": [describe['max']],
+                "Min": [self.describe["min"]], "1st Qu.": [self.describe['25%']],
+                "Median": [self.describe['50%']], "Mean": [self.describe['mean']],
+                "3rd Qu.": [self.describe['75%']], "Max.": [self.describe['max']],
               },
               "limits": {
-                "LCL": [lcl],
-                "UCL": [ucl],
+                "LCL": [self.lcl],
+                "UCL": [self.ucl],
               },
               "group": {
-                   "Sample size": n,
-                   "Num. groups": describe['count'],
-                   "Center": describe['mean'],
-                   "Mean std. dev.": stdevbar,
+                   "Sample size": self.n,
+                   "Num. groups": self.describe['count'],
+                   "Center": self.describe['mean'],
+                   "Mean std. dev.": self.stdevbar,
               }
          }
          return summary
 
     def _summary(self, summary: dict) -> str:
+            """Formatted multiline string with group statistics."""
             _stats_tbl = tabulate(summary['stats'], headers='keys',
                                 tablefmt='plain', floatfmt='.5f')
             _limits_tbl = tabulate(summary['limits'], headers='keys',
@@ -72,9 +77,26 @@ class Xbar(Chart):
 
             return summary_str
 
-    def _chart(self, data: pd.DataFrame, summary: dict) -> object:
-         return None
-    
+    def _set_fig(self) -> matplotlib.figure.Figure:
+         fig = plt.figure(
+              figsize=self.fig_figsize,
+              facecolor=self.fig_facecolor,
+         )
+         fig.suptitle = self.fig_title
+         fig.tight_layout(h_pad=self.fig_hpad)
+         return fig
+
+    def _set_chart(self, data: pd.DataFrame, fig: object) -> object:
+        data = data.mean(axis=1)
+        ax1 = fig.add_subplot(2,1,1)
+        ax1.set(xlabel=self.fig_axis_h, ylabel=self.fig_axis_v)
+        ax1.plot(data, linestyle=':', marker='o')
+
+        ax1.axhline(self.xbarbar, color='green')
+        ax1.axhline(self.ucl, color='red', linestyle='--')
+        ax1.axhline(self.lcl, color='red', linestyle='--')
+             
+        return ax1
 
 class Imr(Chart):
     '''
