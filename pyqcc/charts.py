@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -14,49 +15,67 @@ class Chart(object):
     fig_hpad = 5
     fig_linewidth = 1
 
+#     plot_color = ''
+    plot_linestyle = ':'
+    plot_marker =  "o"
+    center_color = 'green'
+#     center_linestyle = '--'
+    cl_color = "red"
+    cl_linestyle = '--'
+
 class Xbar(Chart):
+    """
+    A control chart for variables.
+
+    Plots the means of rationale group measurements.
+    """
     fig_title = "x-bar Chart of Measurements"
     fig_axis_h = "Subgroup"
     fig_axis_v = "Sample mean"
+
     def __init__(self,
         data: pd.DataFrame,
         title: str = None,
+        print_figure: bool = True, 
         ) -> object:
+
         self.data = data
         if title: self.fig_title = title 
         self.summary_dict = self._summary_dict(self.data)
         self.summary = self._summary(self.summary_dict)
         self.fig = self._set_fig()
         self.ax1 = self._set_chart(self.data, self.fig)
+        
+        if not print_figure: self.fig.set_visible(False)
 
     def _summary_dict(self, data: pd.DataFrame) -> dict:
-         """Group statistics for the data"""
-         self.describe = data.mean(axis=1).describe()
-         self.n = data.shape[1]
-         self.rbar = (data.max(axis=1) - data.min(axis=1)).mean()
-         self.xbarbar = (data.mean(axis=1)).mean()
-         self.stdevbar = data.std(axis=1).mean()
-         self.lcl = self.xbarbar - (A2[self.n] * self.rbar)
-         self.ucl = self.xbarbar + (A2[self.n] * self.rbar)
+        """Group statistics for the data"""
+        self.describe = data.mean(axis=1).describe()
+        self.n = data.shape[1]
+        self.rbar = (data.max(axis=1) - data.min(axis=1)).mean()
+        self.xbarbar = (data.mean(axis=1)).mean()
+        self.stdevbar = data.std(axis=1).mean()
+        self.lcl = self.xbarbar - (A2[self.n] * self.rbar)
+        self.ucl = self.xbarbar + (A2[self.n] * self.rbar)
 
-         summary = {
-              "stats": {
+        summary = {
+            "stats": {
                 "Min": [self.describe["min"]], "1st Qu.": [self.describe['25%']],
                 "Median": [self.describe['50%']], "Mean": [self.describe['mean']],
                 "3rd Qu.": [self.describe['75%']], "Max.": [self.describe['max']],
-              },
-              "limits": {
+            },
+            "limits": {
                 "LCL": [self.lcl],
                 "UCL": [self.ucl],
-              },
-              "group": {
-                   "Sample size": self.n,
-                   "Num. groups": self.describe['count'],
-                   "Center": self.describe['mean'],
-                   "Mean std. dev.": self.stdevbar,
-              }
-         }
-         return summary
+            },
+            "group": {
+                "Sample size": self.n,
+                "Num. groups": self.describe['count'],
+                "Center": self.describe['mean'],
+                "Mean std. dev.": self.stdevbar,
+            }
+        }
+        return summary
 
     def _summary(self, summary: dict) -> str:
             """Formatted multiline string with group statistics."""
@@ -88,15 +107,45 @@ class Xbar(Chart):
 
     def _set_chart(self, data: pd.DataFrame, fig: object) -> object:
         data = data.mean(axis=1)
-        ax1 = fig.add_subplot(2,1,1)
+        ax1 = fig.add_subplot() #2,1,1
         ax1.set(xlabel=self.fig_axis_h, ylabel=self.fig_axis_v)
-        ax1.plot(data, linestyle=':', marker='o')
+        ax1.plot(data, linestyle=self.plot_linestyle, marker=self.plot_marker)
 
-        ax1.axhline(self.xbarbar, color='green')
-        ax1.axhline(self.ucl, color='red', linestyle='--')
-        ax1.axhline(self.lcl, color='red', linestyle='--')
-             
+        ax1.axhline(self.xbarbar, color=self.center_color)
+        ax1.axhline(self.ucl, color=self.cl_color, linestyle=self.cl_linestyle)
+        ax1.axhline(self.lcl, color=self.cl_color, linestyle=self.cl_linestyle)
+
+        ax1b = ax1.secondary_yaxis(location='right')
+        ax1b.set_yticks([self.ucl, self.xbarbar, self.lcl],
+                        labels=[f"UCL: {self.ucl:5.3f}",
+                                f"Mean: {self.xbarbar:5.3f}",
+                                f"LCL: {self.lcl:5.3f}"]
+                        )
         return ax1
+
+class Range(Chart):
+    """
+    A control chart for variables.
+
+    Plots the ranges of rationale group measurements.
+    """
+    fig_title = "R Chart of Measurements"
+    fig_axis_h = "Subgroup"
+    fig_axis_v = "Sample range"
+
+    def __init__(self,
+        data: pd.DataFrame,
+        title: str = None,
+        print_figure: bool = True, 
+        ) -> object:
+
+        self.data = data
+        if title: self.fig_title = title 
+        self.summary_dict = self._summary_dict(self.data)
+        self.summary = self._summary(self.summary_dict)
+        self.fig = self._set_fig()
+        self.ax1 = self._set_chart(self.data, self.fig)
+
 
 class Imr(Chart):
     '''
