@@ -1,13 +1,33 @@
 # py-qcc
 Quality Control Charts in Python. Inspired by the R qcc package.
 
-Planned features:
-- Shewhart quality control charts for continuous, attribute and count data.
-- Cusum and EWMA charts.
-- Operating characteristic curves.
-- Process capability analysis.
-- Pareto chart and cause-and-effect chart.
-- Multivariate control charts.
+## Planned features
+Tools:
+- [x] Reshape data table with value column and subgroup reference column (qcc_groups). 
 
-ToDo:
-- [x] qcc_groups: reshape data based on grouping factor. Array width based on the largest group size with None inserted in smaller groups.
+Charts for continuous variables:
+- [ ] x-bar for subgroup means.
+- [ ] R (range) for subgroup means.
+- [ ] S (standard deviation) for subgroup means.
+- [ ] Individuals for single measurments.
+- [ ] Moving range for single measurments.
+
+Charts for attributes:
+- [ ] p for proportion defective with fixed subgroup size (with and without standard).
+- [ ] np for proportion defective with variable subgroup size (with and without standard).
+- [ ] c for quantity defective with fixed subgroup size (with and without standard).
+- [ ] u for quantity defective per unit
+
+
+Other charts:
+- [ ] Operating characteristic.
+- [ ] Process capability.
+- [ ] Cusum.
+- [ ] EWMA.
+- [ ] Pareto.
+- [ ] Multivariate control charts.
+
+Additional features:
+- [ ] Calibration data and subsequent new data. 
+- [ ] Nelson and Western Electric rules.
+- [ ] Summary statistics.
