@@ -18,7 +18,6 @@ Charts for attributes:
 - [ ] c for quantity defective with fixed subgroup size (with and without standard).
 - [ ] u for quantity defective per unit
 
-
 Other charts:
 - [ ] Operating characteristic.
 - [ ] Process capability.
